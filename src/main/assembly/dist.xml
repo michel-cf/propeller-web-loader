@@ -9,7 +9,7 @@
     </formats>
     <files>
         <file>
-            <source>blocklyprop.bat</source>
+            <source>prop-web-loader.bat</source>
             <outputDirectory>/</outputDirectory>
         </file>
         <file>
@@ -22,29 +22,12 @@
             <directory>webcontent</directory>
             <outputDirectory>webcontent/</outputDirectory>
             <includes>
-                <include>*.html</include>
-                <include>*.js</include>
-                <include>*.css</include>
-                <include>lib/*.js</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>blockly</directory>
-            <outputDirectory>blockly/</outputDirectory>
-            <includes>
                 <include>*.*</include>
                 <include>*/*.*</include>
                 <include>*/*/*.*</include>
                 <include>*/*/*/*.*</include>
             </includes>
         </fileSet>
-        <!--        <fileSet>
-            <directory>propellent</directory>
-            <outputDirectory>propellent/</outputDirectory>
-            <includes>
-                <include>*.*</include>
-            </includes>
-        </fileSet>-->
         <fileSet>
             <directory>propeller-tools</directory>
             <outputDirectory>propeller-tools/</outputDirectory>

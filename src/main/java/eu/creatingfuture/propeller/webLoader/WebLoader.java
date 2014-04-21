@@ -12,11 +12,9 @@ import eu.creatingfuture.propeller.webLoader.propeller.LinuxPropellerLoad;
 import eu.creatingfuture.propeller.webLoader.propeller.WindowsOpenSpin;
 import eu.creatingfuture.propeller.webLoader.propeller.WindowsPropellerLoad;
 import eu.creatingfuture.propeller.webLoader.utils.OsCheck;
-
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.logging.Logger;
-
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -44,9 +42,9 @@ public class WebLoader {
                 propellerCommunicator = new WindowsPropellerLoad();
                 break;
             case Linux:
-            	compiler = new LinuxOpenSpin();
-            	propellerCommunicator = new LinuxPropellerLoad();
-            	break;
+                compiler = new LinuxOpenSpin();
+                propellerCommunicator = new LinuxPropellerLoad();
+                break;
             default:
                 logger.warning("This OS is currently not supported: " + os);
                 System.exit(1);
@@ -69,11 +67,6 @@ public class WebLoader {
         webcontentHandler.setWelcomeFiles(new String[]{"index.html"});
         webcontentHandler.setResourceBase("./webcontent");
 
-        ResourceHandler blocklyHandler = new ResourceHandler();
-        blocklyHandler.setDirectoriesListed(true);
-        blocklyHandler.setWelcomeFiles(new String[]{"index.html"});
-        blocklyHandler.setResourceBase("./blockly");
-
         WebAppContext context = new WebAppContext();
         context.setResourceBase("src/main/webapp");
         context.setContextPath("/webapp");
@@ -81,7 +74,7 @@ public class WebLoader {
         server.setHandler(context);
 
         HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{webcontentHandler, blocklyHandler,/* servletHandler,*/ context, new DefaultHandler()});
+        handlers.setHandlers(new Handler[]{webcontentHandler, /* servletHandler,*/ context, new DefaultHandler()});
         server.setHandler(handlers);
 
         server.start();

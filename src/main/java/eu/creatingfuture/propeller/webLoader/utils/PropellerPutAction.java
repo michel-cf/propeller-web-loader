@@ -9,10 +9,9 @@ package eu.creatingfuture.propeller.webLoader.utils;
  *
  * @author Michel
  */
-public enum PropellerAction {
+public enum PropellerPutAction {
 
-    COMPILE,
-    LOAD_RAM,
-    LOAD_EEPROM,
+    LOAD_EEPROM_BUF,
+    LOAD_RAM_BUF,
 
 }
