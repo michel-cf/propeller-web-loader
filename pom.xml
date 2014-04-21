@@ -78,7 +78,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>eu.creatingfuture.propeller.blocklyprop.BlocklyProp</mainClass>
+                            <mainClass>eu.creatingfuture.propeller.webLoader.WebLoader</mainClass>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
