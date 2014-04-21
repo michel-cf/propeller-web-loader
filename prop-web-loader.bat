@@ -1,1 +1,1 @@
-java -jar BlocklyProp-1.0-SNAPSHOT.jar
+java -jar propeller-web-loader-1.0-SNAPSHOT.jar
