@@ -10,8 +10,11 @@ import eu.creatingfuture.propeller.webLoader.WebLoader;
 import eu.creatingfuture.propeller.webLoader.utils.PropellentResult;
 import eu.creatingfuture.propeller.webLoader.utils.PropellerPostAction;
 import eu.creatingfuture.propeller.webLoader.utils.PropellerPutAction;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -176,21 +179,50 @@ public class PropellerServlet extends HttpServlet {
             return;
         }
 
-        String spinCode = req.getParameter("code");
+        File blocklyAppFile = null;
 
-        File blocklyAppFile = File.createTempFile("blocklyapp", ".spin");
-        try (PrintWriter blocklyAppWriter = new PrintWriter(blocklyAppFile)) {
-            blocklyAppWriter.print(spinCode);
-            blocklyAppWriter.flush();
+        switch (action) {
+            case LOAD_RAM_BUF:
+                blocklyAppFile = File.createTempFile("blocklyapp", ".binary");
+                break;
+            case LOAD_EEPROM_BUF:
+                blocklyAppFile = File.createTempFile("blocklyapp", ".eeprom");
+                break;
+        }
+        if (blocklyAppFile == null) {
+            return;
+        }
+
+        // String bin = req.getParameter("bin");
+        try {
+            byte[] buffer = new byte[1024 * 1024];
+            InputStream input = req.getInputStream();
+            BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(blocklyAppFile));
+            int bytesRead;
+            while ((bytesRead = input.read(buffer)) != -1) {
+                System.out.println(bytesRead);
+                output.write(buffer, 0, bytesRead);
+            }
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException ioe) {
+            blocklyAppFile.delete();
+            result.setSucces(false);
+            result.setCode(103);
+            result.setMessage(ioe.getMessage());
+            out.print(gson.toJson(result));
+            out.flush();
+            return;
         }
 
         boolean success = false;
         switch (action) {
             case LOAD_RAM_BUF:
-                // success = WebLoader.getCompiler().compile(blocklyAppFile);
+                success = WebLoader.getPropellerCommunicator().loadIntoRam(blocklyAppFile, "");
                 break;
             case LOAD_EEPROM_BUF:
-                // success = compileAndRun(action, blocklyAppFile);
+                success = WebLoader.getPropellerCommunicator().loadIntoEeprom(blocklyAppFile, "");
                 break;
         }
         result.setSucces(success);
@@ -201,7 +233,6 @@ public class PropellerServlet extends HttpServlet {
 
         out.print(gson.toJson(result));
         out.flush();
-
     }
 
 }
