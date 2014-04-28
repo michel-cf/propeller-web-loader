@@ -82,10 +82,9 @@ public class PropellerServlet extends HttpServlet {
         String spinCode = req.getParameter("code");
 
         File blocklyAppFile = File.createTempFile("blocklyapp", ".spin");
-        try (PrintWriter blocklyAppWriter = new PrintWriter(blocklyAppFile)) {
-            blocklyAppWriter.print(spinCode);
-            blocklyAppWriter.flush();
-        }
+        PrintWriter blocklyAppWriter = new PrintWriter(blocklyAppFile);
+        blocklyAppWriter.print(spinCode);
+        blocklyAppWriter.flush();
 
         boolean success = false;
         switch (action) {

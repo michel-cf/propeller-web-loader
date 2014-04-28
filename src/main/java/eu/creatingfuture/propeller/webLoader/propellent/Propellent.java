@@ -45,7 +45,7 @@ public class Propellent {
 
      */
     public List<String> getPorts() {
-        List<String> ports = new ArrayList<>();
+        List<String> ports = new ArrayList<String>();
         try {
             CommandLine cmdLine = new CommandLine("propellent/Propellent.exe");
             cmdLine.addArgument("/id");

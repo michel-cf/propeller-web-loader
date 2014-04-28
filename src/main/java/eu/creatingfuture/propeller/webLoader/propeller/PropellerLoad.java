@@ -33,7 +33,7 @@ public abstract class PropellerLoad implements PropellerCommunicator {
     protected String output;
 
     protected List<String> getPorts(String executable) {
-        List<String> ports = new ArrayList<>();
+        List<String> ports = new ArrayList<String>();
         try {
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-P");

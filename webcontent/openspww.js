@@ -1,5 +1,5 @@
 /**
-Provides a web worker process. 
+Provides a web worker process for openspin.js. 
 **/
 
 // ID for console output
