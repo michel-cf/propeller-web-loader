@@ -9,6 +9,8 @@ import eu.creatingfuture.propeller.webLoader.interfaces.Compiler;
 import eu.creatingfuture.propeller.webLoader.interfaces.PropellerCommunicator;
 import eu.creatingfuture.propeller.webLoader.propeller.LinuxOpenSpin;
 import eu.creatingfuture.propeller.webLoader.propeller.LinuxPropellerLoad;
+import eu.creatingfuture.propeller.webLoader.propeller.MacOpenSpin;
+import eu.creatingfuture.propeller.webLoader.propeller.MacPropellerLoad;
 import eu.creatingfuture.propeller.webLoader.propeller.WindowsOpenSpin;
 import eu.creatingfuture.propeller.webLoader.propeller.WindowsPropellerLoad;
 import eu.creatingfuture.propeller.webLoader.utils.OsCheck;
@@ -45,6 +47,9 @@ public class WebLoader {
                 compiler = new LinuxOpenSpin();
                 propellerCommunicator = new LinuxPropellerLoad();
                 break;
+            case MacOS:
+                compiler = new MacOpenSpin();
+                propellerCommunicator = new MacPropellerLoad();
             default:
                 logger.warning("This OS is currently not supported: " + os);
                 System.exit(1);
