@@ -14,4 +14,19 @@
         <url-pattern>/propeller.action</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Working directory</servlet-name>
+        <servlet-class>eu.creatingfuture.propeller.webLoader.servlets.WorkingDirectoryServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Working directory</servlet-name>
+        <url-pattern>/workingdirectory.action</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <description>Freemarker initialization</description>
+        <listener-class>eu.creatingfuture.propeller.webLoader.servlets.listeners.FreemarkerInitializer</listener-class>
+    </listener>
+
 </web-app>

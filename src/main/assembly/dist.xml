@@ -45,6 +45,13 @@
                 <include>WEB-INF/web.xml</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>freemarker</directory>
+            <outputDirectory>freemarker/</outputDirectory>
+            <includes>
+                <include>*.ftl</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
