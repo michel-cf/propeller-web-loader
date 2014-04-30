@@ -50,6 +50,7 @@ public class WebLoader {
             case MacOS:
                 compiler = new MacOpenSpin();
                 propellerCommunicator = new MacPropellerLoad();
+                break;
             default:
                 logger.warning("This OS is currently not supported: " + os);
                 System.exit(1);
