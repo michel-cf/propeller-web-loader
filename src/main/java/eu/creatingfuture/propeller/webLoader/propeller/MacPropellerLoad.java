@@ -28,17 +28,17 @@ public class MacPropellerLoad extends PropellerLoad {
 
     @Override
     public List<String> getPorts() {
-        return this.getPorts("propeller-tools/mac/openspin");
+        return this.getPorts("propeller-tools/mac/propeller-load");
     }
 
     @Override
     public boolean loadIntoRam(File ramFile, String comPort) {
-        return this.loadIntoRam("propeller-tools/mac/openspin", ramFile, comPort);
+        return this.loadIntoRam("propeller-tools/mac/propeller-load", ramFile, comPort);
     }
 
     @Override
     public boolean loadIntoEeprom(File eepromFile, String comPort) {
-        return this.loadIntoEeprom("propeller-tools/mac/openspin", eepromFile, comPort);
+        return this.loadIntoEeprom("propeller-tools/mac/propeller-load", eepromFile, comPort);
     }
 
 }
