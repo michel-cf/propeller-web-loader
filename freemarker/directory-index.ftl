@@ -6,13 +6,16 @@
     <body>
         <h1>Index of ${directoryname}</h1>
         <hr/>
+        <#if listingsuccess>
         <pre>
+<#if showparentdir><a href="workingdirectory.action?path=${parentdir}">..</a></#if>
         <#list files as file>
-<a href="workingdirectory.action?path=${file}">${file}</a>
-        </#list>
+<a href="workingdirectory.action?path=${directoryname}${file.getName()}">${file.getName()}<#if file.isDirectory()>/</#if></a>
+</#list>
 </pre>
-
-        </pre>
+        <#else>
+            <p style="color:red;">Unable to create directory listing</p>
+        </#if>
         <hr/>
         <address style="font-size:small;">Propeller Web Loader: Working directory listing</address>
     </body>

@@ -30,6 +30,7 @@ public class PropellerServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         Gson gson = new Gson();
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
@@ -42,8 +43,9 @@ public class PropellerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         Gson gson = new Gson();
-        PropellentResult result = new PropellentResult(this);
+        PropellentResult result = new PropellentResult();
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
 
@@ -140,8 +142,9 @@ public class PropellerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         Gson gson = new Gson();
-        PropellentResult result = new PropellentResult(this);
+        PropellentResult result = new PropellentResult();
         resp.setContentType("application/json");
         PrintWriter out = resp.getWriter();
 

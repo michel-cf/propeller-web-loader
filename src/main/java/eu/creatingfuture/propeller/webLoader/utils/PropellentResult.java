@@ -5,20 +5,17 @@
  */
 package eu.creatingfuture.propeller.webLoader.utils;
 
-import eu.creatingfuture.propeller.webLoader.servlets.PropellerServlet;
-
 /**
  *
  * @author Michel
  */
 public class PropellentResult {
+
     private boolean succes;
     private int code;
     private String message;
-    private final PropellerServlet outer;
 
-    public PropellentResult(final PropellerServlet outer) {
-        this.outer = outer;
+    public PropellentResult() {
     }
 
     public void setSucces(boolean succes) {

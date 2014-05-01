@@ -17,6 +17,7 @@
     <servlet>
         <servlet-name>Working directory</servlet-name>
         <servlet-class>eu.creatingfuture.propeller.webLoader.servlets.WorkingDirectoryServlet</servlet-class>
+        <load-on-startup>100</load-on-startup>
     </servlet>
 
     <servlet-mapping>
