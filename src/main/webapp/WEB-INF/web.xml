@@ -25,9 +25,38 @@
         <url-pattern>/workingdirectory.action</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Webrequest proxy</servlet-name>
+        <servlet-class>eu.creatingfuture.propeller.webLoader.servlets.WebRequestServlet</servlet-class>
+        <load-on-startup>100</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Webrequest proxy</servlet-name>
+        <url-pattern>/webrequest.action</url-pattern>
+    </servlet-mapping>
+
     <listener>
         <description>Freemarker initialization</description>
         <listener-class>eu.creatingfuture.propeller.webLoader.servlets.listeners.FreemarkerInitializer</listener-class>
     </listener>
+
+    <servlet>
+        <servlet-name>Proxy Google</servlet-name>
+        <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+        <init-param>
+            <param-name>targetUri</param-name>
+            <param-value>http://www.google.com</param-value>
+        </init-param>
+        <init-param>
+            <param-name>log</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Proxy Google</servlet-name>
+        <url-pattern>/proxy/google/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>
