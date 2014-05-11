@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,7 +44,6 @@ public class PropellerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.addHeader("Access-Control-Allow-Origin", "*");
         Gson gson = new Gson();
         PropellentResult result = new PropellentResult();
         resp.setContentType("application/json");
@@ -81,34 +81,57 @@ public class PropellerServlet extends HttpServlet {
             return;
         }
 
+        String comPort = req.getParameter("comPort");
+
         String spinCode = req.getParameter("code");
 
         File blocklyAppFile = File.createTempFile("blocklyapp", ".spin");
-        PrintWriter blocklyAppWriter = new PrintWriter(blocklyAppFile);
-        blocklyAppWriter.print(spinCode);
-        blocklyAppWriter.flush();
+        try {
+            PrintWriter blocklyAppWriter = new PrintWriter(blocklyAppFile);
 
-        boolean success = false;
-        switch (action) {
-            case COMPILE:
-                success = WebLoader.getCompiler().compile(blocklyAppFile);
-                break;
-            case LOAD_RAM:
-            case LOAD_EEPROM:
-                success = compileAndRun(action, blocklyAppFile);
-                break;
+            blocklyAppWriter.print(spinCode);
+            blocklyAppWriter.flush();
+        } catch (IOException ioe) {
         }
-        result.setSucces(success);
-        result.setMessage(WebLoader.getCompiler().getLastOutput() + "\n\n" + WebLoader.getPropellerCommunicator().getLastOutput());
-        result.setCode(WebLoader.getCompiler().getLastExitValue());
 
-        blocklyAppFile.delete();
+        if (action == PropellerPostAction.COMPILE) {
 
-        out.print(gson.toJson(result));
-        out.flush();
+            result.setSucces(WebLoader.getCompiler().compile(blocklyAppFile));
+            result.setMessage(WebLoader.getCompiler().getLastOutput());
+            result.setCode(WebLoader.getCompiler().getLastExitValue());
+
+            blocklyAppFile.delete();
+
+            out.print(gson.toJson(result));
+            out.flush();
+        } else {
+            List<PropellentResult> results = new ArrayList<PropellentResult>();
+            compileAndRun(action, blocklyAppFile, comPort);
+
+            PropellentResult compileResult = new PropellentResult();
+            boolean compileSuccess = WebLoader.getCompiler().wasLastSuccess();
+            compileResult.setSucces(compileSuccess);
+            compileResult.setMessage(WebLoader.getCompiler().getLastOutput());
+            compileResult.setCode(WebLoader.getCompiler().getLastExitValue());
+            results.add(compileResult);
+
+            if (compileSuccess) {
+                PropellentResult communicatorResult = new PropellentResult();
+                communicatorResult.setSucces(WebLoader.getPropellerCommunicator().wasLastSuccess());
+                communicatorResult.setMessage(WebLoader.getPropellerCommunicator().getLastOutput());
+                communicatorResult.setCode(WebLoader.getPropellerCommunicator().getLastExitValue());
+                results.add(communicatorResult);
+            }
+
+            blocklyAppFile.delete();
+
+            out.print(gson.toJson(results));
+            out.flush();
+        }
+
     }
 
-    private boolean compileAndRun(PropellerPostAction action, File blocklyAppFile) throws IOException {
+    private boolean compileAndRun(PropellerPostAction action, File blocklyAppFile, String comPort) throws IOException {
         boolean success = true;
 
         File compiledFile = null;
@@ -125,10 +148,10 @@ public class PropellerServlet extends HttpServlet {
         if (success) {
             switch (action) {
                 case LOAD_RAM:
-                    success = WebLoader.getPropellerCommunicator().loadIntoRam(compiledFile, null);
+                    success = WebLoader.getPropellerCommunicator().loadIntoRam(compiledFile, comPort);
                     break;
                 case LOAD_EEPROM:
-                    success = WebLoader.getPropellerCommunicator().loadIntoEeprom(compiledFile, null);
+                    success = WebLoader.getPropellerCommunicator().loadIntoEeprom(compiledFile, comPort);
                     break;
             }
 
@@ -181,6 +204,8 @@ public class PropellerServlet extends HttpServlet {
             return;
         }
 
+        String comPort = req.getParameter("comPort");
+
         File blocklyAppFile = null;
 
         switch (action) {
@@ -221,10 +246,10 @@ public class PropellerServlet extends HttpServlet {
         boolean success = false;
         switch (action) {
             case LOAD_RAM_BUF:
-                success = WebLoader.getPropellerCommunicator().loadIntoRam(blocklyAppFile, "");
+                success = WebLoader.getPropellerCommunicator().loadIntoRam(blocklyAppFile, comPort);
                 break;
             case LOAD_EEPROM_BUF:
-                success = WebLoader.getPropellerCommunicator().loadIntoEeprom(blocklyAppFile, "");
+                success = WebLoader.getPropellerCommunicator().loadIntoEeprom(blocklyAppFile, comPort);
                 break;
         }
         result.setSucces(success);

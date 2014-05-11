@@ -26,6 +26,7 @@ public abstract class OpenSpin implements Compiler {
 
     private static final Logger logger = Logger.getLogger(OpenSpin.class.getName());
 
+    protected boolean success;
     protected int exitValue;
     protected String output;
 
@@ -39,12 +40,15 @@ public abstract class OpenSpin implements Compiler {
     protected boolean compile(String executable, File sourceFile) {
         try {
             File temporaryDestinationFile = File.createTempFile("blocklyapp", ".binary");
+            File libDirectory = new File(new File(System.getProperty("user.dir")), "/propeller-lib");
             Map map = new HashMap();
             map.put("sourceFile", sourceFile);
             map.put("destinationFile", temporaryDestinationFile);
+            map.put("libDirectory", libDirectory);
 
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-o").addArgument("${destinationFile}");
+            cmdLine.addArgument("-L").addArgument("${libDirectory}");
             cmdLine.addArgument("${sourceFile}");
             cmdLine.setSubstitutionMap(map);
             DefaultExecutor executor = new DefaultExecutor();
@@ -59,6 +63,7 @@ public abstract class OpenSpin implements Compiler {
             } catch (ExecuteException ee) {
                 exitValue = ee.getExitValue();
                 logger.log(Level.SEVERE, "Unexpected exit value: {0}", exitValue);
+                success = false;
                 return false;
             } finally {
                 temporaryDestinationFile.delete();
@@ -85,22 +90,27 @@ public abstract class OpenSpin implements Compiler {
              */
 //            System.out.println("output: " + output);
 //            System.out.println("exitValue: " + exitValue);
+            success = true;
             return true;
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
+            success = false;
             return false;
         }
     }
 
     protected boolean compileForRam(String executable, File sourceFile, File destinationFile) {
         try {
+            File libDirectory = new File(new File(System.getProperty("user.dir")), "/propeller-lib");
             Map map = new HashMap();
             map.put("sourceFile", sourceFile);
             map.put("destinationFile", destinationFile);
+            map.put("libDirectory", libDirectory);
 
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-b");
             cmdLine.addArgument("-o").addArgument("${destinationFile}");
+            cmdLine.addArgument("-L").addArgument("${libDirectory}");
             cmdLine.addArgument("${sourceFile}");
             cmdLine.setSubstitutionMap(map);
             DefaultExecutor executor = new DefaultExecutor();
@@ -115,6 +125,7 @@ public abstract class OpenSpin implements Compiler {
             } catch (ExecuteException ee) {
                 exitValue = ee.getExitValue();
                 logger.log(Level.SEVERE, "Unexpected exit value: {0}", exitValue);
+                success = false;
                 return false;
             } finally {
                 output = outputStream.toString();
@@ -140,22 +151,27 @@ public abstract class OpenSpin implements Compiler {
              */
 //            System.out.println("output: " + output);
 //            System.out.println("exitValue: " + exitValue);
+            success = true;
             return true;
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
+            success = false;
             return false;
         }
     }
 
     protected boolean compileForEeprom(String executable, File sourceFile, File destinationFile) {
         try {
+            File libDirectory = new File(new File(System.getProperty("user.dir")), "/propeller-lib");
             Map map = new HashMap();
             map.put("sourceFile", sourceFile);
             map.put("destinationFile", destinationFile);
+            map.put("libDirectory", libDirectory);
 
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-e");
             cmdLine.addArgument("-o").addArgument("${destinationFile}");
+            cmdLine.addArgument("-L").addArgument("${libDirectory}");
             cmdLine.addArgument("${sourceFile}");
             cmdLine.setSubstitutionMap(map);
             DefaultExecutor executor = new DefaultExecutor();
@@ -170,6 +186,7 @@ public abstract class OpenSpin implements Compiler {
             } catch (ExecuteException ee) {
                 exitValue = ee.getExitValue();
                 logger.log(Level.SEVERE, "Unexpected exit value: {0}", exitValue);
+                success = false;
                 return false;
             } finally {
                 output = outputStream.toString();
@@ -195,9 +212,11 @@ public abstract class OpenSpin implements Compiler {
              */
 //            System.out.println("output: " + output);
 //            System.out.println("exitValue: " + exitValue);
+            success = true;
             return true;
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
+            success = false;
             return false;
         }
     }
@@ -210,6 +229,11 @@ public abstract class OpenSpin implements Compiler {
     @Override
     public int getLastExitValue() {
         return exitValue;
+    }
+
+    @Override
+    public boolean wasLastSuccess() {
+        return success;
     }
 
 }

@@ -31,6 +31,7 @@ public abstract class PropellerLoad implements PropellerCommunicator {
 
     protected int exitValue;
     protected String output;
+    protected boolean success;
 
     protected List<String> getPorts(String executable) {
         List<String> ports = new ArrayList<String>();
@@ -80,6 +81,9 @@ public abstract class PropellerLoad implements PropellerCommunicator {
 
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-r");
+            if (comPort != null) {
+                cmdLine.addArgument("-p").addArgument(comPort);
+            }
             cmdLine.addArgument("${ramFile}");
 
             cmdLine.setSubstitutionMap(map);
@@ -95,14 +99,17 @@ public abstract class PropellerLoad implements PropellerCommunicator {
             } catch (ExecuteException ee) {
                 exitValue = ee.getExitValue();
                 logger.log(Level.SEVERE, "Unexpected exit value: {0}", exitValue);
+                success = false;
                 return false;
             } finally {
                 output = outputStream.toString();
             }
 
+            success = true;
             return true;
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
+            success = false;
             return false;
         }
     }
@@ -115,6 +122,9 @@ public abstract class PropellerLoad implements PropellerCommunicator {
             CommandLine cmdLine = new CommandLine(executable);
             cmdLine.addArgument("-r");
             cmdLine.addArgument("-e");
+            if (comPort != null) {
+                cmdLine.addArgument("-p").addArgument(comPort);
+            }
             cmdLine.addArgument("${eepromFile}");
 
             cmdLine.setSubstitutionMap(map);
@@ -130,14 +140,17 @@ public abstract class PropellerLoad implements PropellerCommunicator {
             } catch (ExecuteException ee) {
                 exitValue = ee.getExitValue();
                 logger.log(Level.SEVERE, "Unexpected exit value: {0}", exitValue);
+                success = false;
                 return false;
             } finally {
                 output = outputStream.toString();
             }
 
+            success = true;
             return true;
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
+            success = false;
             return false;
         }
     }
@@ -151,4 +164,10 @@ public abstract class PropellerLoad implements PropellerCommunicator {
     public int getLastExitValue() {
         return exitValue;
     }
+
+    @Override
+    public boolean wasLastSuccess() {
+        return success;
+    }
+
 }
